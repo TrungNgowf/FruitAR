@@ -1,0 +1,26 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "jsx": "react",
+    "allowJs": true,
+    "target": "es6",
+    "paths": {
+      "@/*": ["./*"]
+    }
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.js",
+    "**/*.jsx",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts",
+    "app/(index)/_layout.jsx",
+    "app/(tabs)/_layout.tsx",
+    "app/(book-module)/_layout.jsx",
+    "utils/FruitModels.tsx",
+    "app/classify_module.jsx",
+    "utils/base64_binary.jsx"
+  ]
+}
