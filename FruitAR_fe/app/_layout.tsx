@@ -54,14 +54,11 @@ export default function RootLayout() {
         }}
       >
         <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="book_module" options={{ title: "Book AR" }} />
-        <Stack.Screen
-          name="classify_module"
-          options={{ title: "Classifier" }}
-        />
+        <Stack.Screen name="book_module" options={{ title: "Sách AR" }} />
+        <Stack.Screen name="classify_module" options={{ title: "Phân loại" }} />
         <Stack.Screen
           name="ar_for_classify"
-          options={{ title: "Place your model" }}
+          options={{ title: "Mô hình AR" }}
         />
         <Stack.Screen name="+not-found" />
       </Stack>

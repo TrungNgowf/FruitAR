@@ -4,6 +4,7 @@ import {
   ViroARScene,
   ViroARSceneNavigator,
   ViroNode,
+  ViroSound,
 } from "@viro-community/react-viro";
 import { useEffect, useState } from "react";
 import { View, Image, Pressable } from "react-native";

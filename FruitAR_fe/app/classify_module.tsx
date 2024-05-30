@@ -18,22 +18,22 @@ import {
 import { cropPicture } from "@/utils/image_helper";
 import * as ImagePicker from "expo-image-picker";
 import { CameraView, useCameraPermissions } from "expo-camera";
+import { Audio, AVPlaybackSource } from "expo-av";
 
-const PredictClasses = [
-  "Apple",
-  "Grape",
-  "Mango",
-  "Strawberry",
-  "Banana",
-  "Kiwano",
-  "Dragon Fruit",
-  "Durian",
-  "Lychee",
-  "Papaya",
-  "Pineapple",
-  "Salak",
-];
-
+const PredictClasses = new Map<string, string>([
+  ["Apple", "Táo"],
+  ["Grape", "Nho"],
+  ["Mango", "Xoài"],
+  ["Strawberry", "Dâu"],
+  ["Banana", "Chuối"],
+  ["Kiwano", "Dưa gai"],
+  ["DragonFruit", "Thanh long"],
+  ["Durian", "Sầu riêng"],
+  ["Lychee", "Vải"],
+  ["Papaya", "Đu đủ"],
+  ["Pineapple", "Dứa"],
+  ["Salak", "Trái mây"],
+]);
 export default function ClassifyScreen() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [result, setResult] = useState<string | null>(null);
@@ -62,7 +62,7 @@ export default function ClassifyScreen() {
 
   const processImagePrediction = async (base64Image: any) => {
     setIsProcessing(true);
-    const result = await getPredictionFromServer(base64Image);
+    let result = await getPredictionFromServer(base64Image);
     setResult(result);
     setIsProcessing(false);
     console.log(result);
@@ -77,7 +77,7 @@ export default function ClassifyScreen() {
     });
     try {
       console.log(formData._parts);
-      let res = await fetch("http://10.0.0.177:3000/classify", {
+      let res = await fetch("http://192.168.1.13:3000/classify", {
         method: "POST",
         body: formData,
         headers: {
@@ -145,6 +145,22 @@ export default function ClassifyScreen() {
     setImageUri(null);
   };
 
+  async function playSound(soundFile: AVPlaybackSource, shouldPlay = true) {
+    // 1. Load the sound asset
+    const { sound } = await Audio.Sound.createAsync(
+      soundFile,
+      { isLooping: false } // Set looping to false by default
+    );
+
+    // 2. Check the condition before playing
+    if (shouldPlay) {
+      // 3. Play the sound
+      await sound.setStatusAsync({ shouldPlay: true });
+    }
+
+    return sound;
+  }
+
   return (
     <View className="flex-col justify-start items-center w-[100%] h-[100%] bg-white">
       <View className="w-[90%] h-[75%] rounded-xl overflow-hidden m-4">
@@ -194,7 +210,9 @@ export default function ClassifyScreen() {
                 <View className="flex flex-col justify-start items-center">
                   <Text className="text-lg font-montserrat font-normal text-center mt-4">
                     Kết quả:{"\n"}
-                    <Text className="font-bold, text-2xl">{result}</Text>
+                    <Text className="font-bold, text-2xl">
+                      {PredictClasses.get(result)}
+                    </Text>
                   </Text>
                   <Link
                     replace
@@ -204,10 +222,57 @@ export default function ClassifyScreen() {
                     }}
                     asChild
                   >
-                    <TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => {
+                        switch (result) {
+                          case "Apple":
+                            playSound(require("@/assets/sounds/apple.mp3"));
+                            break;
+                          case "Grape":
+                            playSound(require("@/assets/sounds/grape.mp3"));
+                            break;
+                          case "Mango":
+                            playSound(require("@/assets/sounds/mango.mp3"));
+                            break;
+                          case "Strawberry":
+                            playSound(
+                              require("@/assets/sounds/strawberry.mp3")
+                            );
+                            break;
+                          case "Banana":
+                            playSound(require("@/assets/sounds/banana.mp3"));
+                            break;
+                          case "Kiwano":
+                            playSound(require("@/assets/sounds/kiwano.mp3"));
+                            break;
+                          case "DragonFruit":
+                            playSound(
+                              require("@/assets/sounds/dragon_fruit.mp3")
+                            );
+                            break;
+                          case "Durian":
+                            playSound(require("@/assets/sounds/durian.mp3"));
+                            break;
+                          case "Lychee":
+                            playSound(require("@/assets/sounds/lychee.mp3"));
+                            break;
+                          case "Papaya":
+                            playSound(require("@/assets/sounds/papaya.mp3"));
+                            break;
+                          case "Pineapple":
+                            playSound(require("@/assets/sounds/pineapple.mp3"));
+                            break;
+                          case "Salak":
+                            playSound(require("@/assets/sounds/salak.mp3"));
+                            break;
+                          default:
+                            break;
+                        }
+                      }}
+                    >
                       <View className=" bg-emerald-500 rounded-md items-center justify-center flex mt-5 p-2">
                         <Text className=" text-white font-semibold text-center text-lg self-center">
-                          So sánh với mô hình AR ➜
+                          Mô hình AR tương ứng ➜
                         </Text>
                       </View>
                     </TouchableOpacity>
